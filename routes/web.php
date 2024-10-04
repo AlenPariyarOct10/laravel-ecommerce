@@ -3,6 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Backend\CategoryController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,20 +34,21 @@ Route::prefix('admin')->group(function () {
             return view('admin.products.index');
         })->name('admin.products.index');
 
-        Route::get('create', function () {
-            return view('admin.products.create');
-        })->name('admin.products.create');
+        Route::get('create', [ProductController::class, "create"])->name('admin.products.create');
     });
 
 
     Route::prefix('categories')->group(function () {
-       Route::get('index', function () {
-           return view('admin.categories.index');
-       })->name('admin.categories.index');
-       Route::get('create', function () {
-           return view('admin.categories.create');
-       })->name('admin.categories.create');
+        Route::get('/', [CategoryController::class, "index"])->name('admin.categories.index');
+        Route::get('create', [CategoryController::class, 'create'])->name('admin.categories.create'); // Use controller for create
+        Route::post('store', [CategoryController::class, 'store'])->name('admin.categories.store');
     });
+
+
+    Route::resource('products', ProductController::class);
+    Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::post('categories/store', [\App\Http\Controllers\Backend\CategoryController::class, 'store'])->name('admin.categories.store');
+
 });
 
 

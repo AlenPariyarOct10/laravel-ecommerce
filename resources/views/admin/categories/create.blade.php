@@ -7,25 +7,26 @@
 
 
 @section('content')
-    <form method="POST">
+    <form method="POST" action="{{route('admin.categories.store')}}">
+        @csrf
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{session('success')}}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{session('error')}}
+            </div>
+        @endif
+
         <div class="form-group">
-            <label for="productName">Product name</label>
-            <input type="text" class="form-control" id="productName" aria-describedby="productName" placeholder="Enter name">
+            <label for="productName">Category name</label>
+            <input type="text" class="form-control" id="productName" aria-describedby="productName" name="name"
+                   placeholder="Enter title">
         </div>
-        <div class="form-group">
-            <label for="productPrice">Product price</label>
-            <input type="number" class="form-control" id="productPrice" aria-describedby="productPrice" placeholder="Enter price">
-        </div>
-        <div class="form-group">
-            <label for="productCategory">Product category</label>
-            <select class="form-control" name="productCategory" id="productCategory">
-                <option value="null" selected disabled>Select One</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-            </select>
-        </div>
+
 
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
