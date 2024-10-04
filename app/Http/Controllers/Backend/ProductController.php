@@ -13,7 +13,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
-        return view('products.index', compact('products'));
+        return view('admin.products.index', compact('products'));
     }
 
     public function create()
@@ -30,13 +30,13 @@ class ProductController extends Controller
             'slug' => 'required|unique:products',
             'price' => 'required',
             'category_id' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'imagePhoto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
 
 
-        $imageName = time().'.'.request()->image->getClientOriginalExtension();
-        request()->image->move(public_path('images/products'), $imageName);
+        $imageName = time().'.'.request()->imagePhoto->getClientOriginalExtension();
+        request()->imagePhoto->move(public_path('images/products'), $imageName);
         $request->merge(['image' => $imageName]);
 
         $allCategories = Category::all();

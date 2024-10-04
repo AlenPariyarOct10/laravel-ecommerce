@@ -18,7 +18,7 @@ class AuthController extends Controller
 
         // Attempt to log in using the 'admin' guard
         if (Auth::guard('admin')->attempt($request->only('email', 'password'))) {
-            return redirect()->intended(route('admin.products.index'));
+            return redirect()->intended(route('products.index'));
         } else {
             return back()->withErrors([
                 'email' => 'The provided credentials do not match our records.',

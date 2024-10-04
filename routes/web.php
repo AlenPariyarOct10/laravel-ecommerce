@@ -25,14 +25,14 @@ Route::prefix('admin')->group(function () {
 
     Route::post('login', [\App\Http\Controllers\Backend\AuthController::class, "login"])->name('admin.login.submit');
 
+    Route::resource('products', ProductController::class);
+
     Route::middleware(['auth:admin', 'verified'])->group(function () {
         Route::get('/', function () {
             return view('admin.index');
         });
 
-        Route::get('dashboard', function () {
-            return view('admin.products.index');
-        })->name('admin.products.index');
+
 
         Route::get('create', [ProductController::class, "create"])->name('admin.products.create');
     });
@@ -45,7 +45,6 @@ Route::prefix('admin')->group(function () {
     });
 
 
-    Route::resource('products', ProductController::class);
     Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
     Route::post('categories/store', [\App\Http\Controllers\Backend\CategoryController::class, 'store'])->name('admin.categories.store');
 

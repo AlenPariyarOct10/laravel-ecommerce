@@ -55,7 +55,7 @@
 
         <div class="mb-3">
             <label for="productImage" class="form-label">Product Image</label>
-            <input class="form-control" name="image" type="file" id="productImage" required>
+            <input class="form-control" name="imagePhoto" type="file" id="productImage" required>
             @error('image')
             <div class="alert alert-danger">{{ $message }}</div>
             @enderror
