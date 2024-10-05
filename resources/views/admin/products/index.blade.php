@@ -6,6 +6,16 @@
 @endsection
 
 @section('content')
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{session('success')}}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{session('error')}}
+        </div>
+    @endif
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
@@ -71,22 +81,29 @@
                                 <tbody>
 
                                 @forelse($products as $product)
+
                                     <tr class="odd">
                                         <td class="sorting_1">{{$product->id}}</td>
                                         <td>{{$product->name}}</td>
                                         <td>{{$product->description}}</td>
                                         <td>Rs. {{$product->price}}</td>
                                         <td>
-                                            <img src="{{ asset('images/products')."/".$product->image}}" class="img-fluid" alt="{{$product->name}}">
+                                            <img src="{{ asset('images/products')."/".$product->image}}"
+                                                 class="img-fluid" alt="{{$product->name}}">
                                         </td>
-                                        <td>
+                                        <td class="flex flex-row">
+
                                             <button class="btn btn-primary">Edit</button>
-                                            <button class="btn btn-danger">Danger</button>
+                                            <form action="{{route('products.destroy', $product->id)}}" method='POST'>
+                                                @csrf
+                                                <input type="hidden" name="_method" value="delete"/>
+                                                <button class="btn btn-danger">Delete</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr class="even">
-                                        <td colspan="6" class="sorting_1">Empty</td>
+                                        <td colspan="6" class="alert alert-danger">Empty</td>
                                     </tr>
                                 @endforelse
 

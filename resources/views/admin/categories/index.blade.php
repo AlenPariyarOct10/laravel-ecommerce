@@ -6,6 +6,16 @@
 @endsection
 
 @section('content')
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{session('success')}}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{session('error')}}
+        </div>
+    @endif
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">All Categories</h6>
@@ -46,8 +56,15 @@
                                         <td>{{$category->id}}</td>
                                         <td>{{$category->name}}</td>
                                         <td>
-                                            <button class="btn btn-danger">Delete</button>
-                                            <button class="btn btn-primary">Edit</button>
+                                            <div class="d-flex">
+                                                <form action="{{route('admin.categories.destroy', $category->id)}}" method='post'>
+                                                    @csrf
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button class="btn btn-danger">Delete</button>
+                                                </form>
+                                                <button class="btn btn-primary">Edit</button>
+
+                                            </div>
                                         </td>
                                     </tr>
 

@@ -4,13 +4,12 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
 use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\CategoryController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FrontendProductController::class, 'index']);
 
 Route::prefix('admin')->group(function () {
 
@@ -42,6 +41,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/', [CategoryController::class, "index"])->name('admin.categories.index');
         Route::get('create', [CategoryController::class, 'create'])->name('admin.categories.create'); // Use controller for create
         Route::post('store', [CategoryController::class, 'store'])->name('admin.categories.store');
+        Route::delete('{id}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
     });
 
 

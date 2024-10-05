@@ -13,7 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('admin.products.index', );
+        $allCategories = Category::all();
+        return view('admin.categories.index', compact('allCategories'));
     }
 
     /**
@@ -23,7 +24,7 @@ class CategoryController extends Controller
     {
         $allCategories = Category::all();
 
-        return view('admin.products.create',compact('allCategories'));
+        return view('admin.categories.create',compact('allCategories'));
     }
 
     /**
@@ -71,6 +72,10 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if(Category::destroy($id)){
+            return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully');
+        }else{
+            return redirect()->route('admin.categories.index')->with('error', 'Category not deleted');
+        }
     }
 }
