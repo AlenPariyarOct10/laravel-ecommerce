@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -9,7 +10,16 @@ use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\CategoryController;
 
 
-Route::get('/', [FrontendProductController::class, 'index']);
+Route::get('/', [FrontendProductController::class, 'index'])->name('home');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::get('/getCart', [CartController::class, 'getCart'])->name('cart.getCart');
+    Route::delete('/cart/destroy/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+    Route::get('create', [ProductController::class, "create"])->name('admin.products.create');
+});
 
 Route::prefix('admin')->group(function () {
 
@@ -30,8 +40,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/', function () {
             return view('admin.index');
         });
-
-
 
         Route::get('create', [ProductController::class, "create"])->name('admin.products.create');
     });

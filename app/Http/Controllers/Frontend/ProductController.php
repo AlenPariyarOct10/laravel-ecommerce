@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -39,8 +40,11 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
+
+        $uid = auth()->user();
         $product = Product::with('categories')->findOrFail($id);
-        return view('product', compact('product'));
+        $cartItems = Cart::where('user_id', $uid->id)->get();
+        return view('product', compact('product', 'cartItems'));
     }
 
     /**

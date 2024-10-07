@@ -32,7 +32,7 @@
         <div class="hidden w-full md:block md:w-auto" id="navbar-default">
             <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                 <li>
-                    <a href="#"
+                    <a href="/"
                        class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
                        aria-current="page">Home</a>
                 </li>
@@ -66,11 +66,14 @@
                         @endif
                     @endauth
                 @endif
-                <li>
-                    <a  class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                        Cart (0)
-                    </a>
-                </li>
+                @if(auth()->hasUser())
+                    <li>
+                        <a href="{{route('cart.index')}}" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
+                            Cart (<span id="cartItems">0</span>)
+                        </a>
+                    </li>
+                @endif
+
             </ul>
         </div>
     </div>
@@ -79,7 +82,77 @@
 @yield("content")
 
 <!-- Include SweetAlert2 JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+    @if(auth()->hasUser())
+    localStorage.cart = 0;
+
+    async function fetchCart()
+    {
+        await $.ajax({
+            url: '{{route("cart.getCart")}}',
+            method: "GET",
+            data: {
+                _token: '{{csrf_token()}}',
+            },
+
+            success: function (msg)
+            {
+                console.log("success : ", msg);
+                const allItems = JSON.parse(msg);
+                console.log(allItems.length);
+
+                $("#cartItems").text(allItems.length);
+                localStorage.cart = allItems.length;
+            },
+
+            error: function (msg)
+            {
+                console.log("error : ", msg);
+            }
+        })
+    }
+
+    fetchCart();
+
+    function addToCart(id, name, quantity) {
+
+        $.ajax({
+            url: '{{route("cart.store")}}',
+            method: 'POST',
+            data: {
+                id: id,
+                quantity: quantity,
+                _token: '{{csrf_token()}}',
+            },
+
+            success: function(result) {
+                Swal.fire({
+                    title: name + " Added to Cart!",
+                    text: "Quantity: " + quantity,
+                    icon: "success"
+                });
+            },
+
+            error: function(result) {
+                console.log(result);
+                Swal.fire({
+                    title: "Failed to add item to the cart",
+                    text: "Failed",
+                    icon: "error"
+                });
+            }
+
+        })
+
+
+    };
+
+    @endif
+</script>
 
 @yield('js')
 </body>
